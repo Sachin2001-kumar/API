@@ -26,7 +26,52 @@ const resolvers={
         author(_,args){
             return authors.find((author)=>author.id===args.id)
         }
-        
+    },
+    Game:{
+        reviews(parent){
+         return reviews.filter((r)=>r.game_id===parent.id)
+        }
+    },
+    Author:{
+        reviews(parent){
+         return reviews.filter((r)=>r.author_id===parent.id)
+        }
+    },
+    Review:{
+        author(parent){
+            return authors.find((a)=>a.id===parent.id)
+        },
+        game(parent){
+            return games.find((g)=>g.id===parent.id)
+        },
+    },
+    //Mutation
+    Mutation:{
+        deleteGame(_,args){
+            games=games.filter((a)=>a.id!==args.id)
+
+            return games
+        },
+        addGame(_,args){
+            let game={
+                ...args.game,
+                id:Math.floor(Math.random()*1000).toString()
+            }
+
+            games.push(game)
+            return games
+        },
+        updateGame(_,args){
+            games=games.map((g)=>{
+                if(g.id===args.id){
+                    return{...g,...args.edits}
+                }
+                return g
+            })
+
+            return games.find((g)=>g.id===args.id)
+            
+        }
 
     }
 }
